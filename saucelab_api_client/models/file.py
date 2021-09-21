@@ -1,0 +1,34 @@
+class File:
+    def __init__(self, data: dict):
+        self.id: str = data.get('id')
+        self.owner: dict = data.get('owner')
+        self.name: str = data.get('name')
+        self.upload_timestamp: int = data.get('upload_timestamp')
+        self.etag: str = data.get('etag')
+        self.kind: str = data.get('kind')
+        self.group_id: int = data.get('group_id')
+        self.description = data.get('description')
+        self.metadata: Metadata = Metadata(data.get('metadata'))
+        self.access: dict = data.get('access')
+        self.sha256: str = data.get('sha256')
+
+    def __str__(self):
+        return self.name
+
+
+class Metadata:
+    def __init__(self, data: dict):
+        if data is not None:
+            self.identifier: str = data.get('identifier')
+            self.name: str = data.get('name')
+            self.version: str = data.get('version')
+            self.is_test_runner: bool = data.get('is_test_runner')
+            self.icon = data.get('icon')
+            self.short_version: str = data.get('short_version')
+            self.is_simulator: bool = data.get('is_simulator')
+            self.min_os: str = data.get('min_os')
+            self.target_os: str = data.get('target_os')
+            self.test_runner_plugin_path = data.get('test_runner_plugin_path')
+
+    def __str__(self):
+        return self.identifier
