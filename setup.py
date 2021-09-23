@@ -14,7 +14,7 @@ setup(
     author='Biriukov Maksym',
     author_email='maximbirukov77@gmail.com',
     url="https://github.com/Slamnlc/saucelab-api-client",
-    download_url='https://github.com/Slamnlc/drone-api-client/archive/refs/tags/v0.2.tar.gz',
+    download_url='https://github.com/Slamnlc/saucelab-api-client/archive/refs/tags/v0.1.tar.gz',
     packages=setuptools.find_packages(exclude=("tests", "dev_tools")),
     install_requires=[
         'requests'
