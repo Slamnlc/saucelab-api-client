@@ -1,7 +1,7 @@
 class File:
     def __init__(self, data: dict):
         if data is not None:
-            self.file_id: str = data.get('file_id')
+            self.file_id: str = data.get('id')
             self.owner: dict = data.get('owner')
             self.name: str = data.get('name')
             self.upload_timestamp: int = data.get('upload_timestamp')

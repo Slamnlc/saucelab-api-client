@@ -1,7 +1,7 @@
 class TeamSearch:
     def __init__(self, data: dict):
         if data is not None:
-            self.team_id: str = data.get('file_id')
+            self.team_id: str = data.get('id')
             self.name: str = data.get('name')
             self.settings: Settings = Settings(data.get('settings'))
             self.group: AccountGroup = AccountGroup(data.get('group'))
@@ -16,7 +16,7 @@ class TeamSearch:
 class Team:
     def __init__(self, data: dict):
         if data is not None:
-            self.team_id: str = data.get('file_id')
+            self.team_id: str = data.get('id')
             self.name: str = data.get('name')
             self.org_uuid: str = data.get('org_uuid')
             self.group: AccountGroup = AccountGroup(data.get('group'))
@@ -41,7 +41,7 @@ class Settings:
 class AccountGroup:
     def __init__(self, data: dict):
         if data is not None:
-            self.group_id: str = data.get('file_id')
+            self.group_id: str = data.get('id')
             self.name: str = data.get('name')
             self.virtual_machines: int = data.get('virtual_machines')
             self.real_devices: int = data.get('real_devices')
@@ -53,7 +53,7 @@ class AccountGroup:
 class User:
     def __init__(self, data: dict):
         if data is not None:
-            self.user_id: str = data.get('file_id')
+            self.user_id: str = data.get('id')
             self.username: str = data.get('username')
             self.email: str = data.get('email')
             self.first_name: str = data.get('first_name')
@@ -79,7 +79,7 @@ class User:
 class UserSearch:
     def __init__(self, data: dict):
         if data is not None:
-            self.user_id: str = data.get('file_id')
+            self.user_id: str = data.get('id')
             self.username: str = data.get('username')
             self.first_name: str = data.get('first_name')
             self.last_name: str = data.get('last_name')
@@ -106,7 +106,7 @@ class Role:
 class Organization:
     def __init__(self, data: dict):
         if data is not None:
-            self.organization_id: str = data.get('file_id')
+            self.organization_id: str = data.get('id')
             self.name: str = data.get('name')
 
     def __str__(self):

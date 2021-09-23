@@ -17,7 +17,7 @@ class Job:
         self.device_descriptor: Device = Device(data.get('device_descriptor'))
         self.end_time: int = data.get('end_time')
         self.error = data.get('error')
-        self.file_id: str = data.get('file_id')
+        self.file_id: str = data.get('id')
         self.framework_log_url: str = data.get('framework_log_url')
         self.device_log_url: str = data.get('device_log_url')
         self.requests_url: str = data.get('requests_url')
