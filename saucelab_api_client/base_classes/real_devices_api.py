@@ -91,7 +91,7 @@ class RealDevices(Base):
         local_variables = locals()
         main_dict = {key: value for key, value in local_variables.items()
                      if key not in ('self', 'local_variables', 'is_available', 'get_random_devices')
-                     and '__py' not in key and value}
+                     and '__py' not in key and value is not None}
         main_property = {key: value for key, value in main_dict.items()
                          if key[:3] not in ('max', 'min') and 'contains' not in key}
         min_property = {key[4:]: value for key, value in main_dict.items() if key[:3] == 'min'}
@@ -106,15 +106,15 @@ class RealDevices(Base):
                 if device.device_id not in available_devices:
                     return False
             if all(tuple(str(device.__getattribute__(key)).lower() == str(value).lower()
-                         for key, value in main_property.items() if value)):
+                         for key, value in main_property.items() if value is not None)):
                 check_min = all(tuple(device.__getattribute__(key) >= value if key != 'os_version' else
                                       compare_version(device.__getattribute__(key), value) != 'less' for
-                                      key, value in min_property.items() if value))
+                                      key, value in min_property.items() if value is not None))
                 check_max = all(tuple(device.__getattribute__(key) <= value if key != 'os_version' else
                                       compare_version(device.__getattribute__(key), value) != 'more'
-                                      for key, value in max_property.items() if value))
+                                      for key, value in max_property.items() if value is not None))
                 check_contains = all(tuple(value.lower() in device.__getattribute__(key).lower() for key, value in
-                                           contains_property.items() if value))
+                                           contains_property.items() if value is not None))
                 return all((check_min, check_max, check_contains))
             return False
 
