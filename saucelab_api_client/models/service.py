@@ -1,5 +1,7 @@
 import random
 import sys
+import threading
+import time
 from datetime import datetime
 from threading import Event
 from time import sleep
@@ -63,7 +65,7 @@ def print_progress(event: Event, progress_type: str):
         if random.randint(0, 7) == 5:
             row[-1] = random.choice(enemy)
         main_row = ''.join(row)
-        txt = f'\r{work} {str(datetime.now() - start_time).split(".", maxsplit=1)}...{symbols[index]}'
+        txt = f'\r{work} {str(datetime.now() - start_time).split(".", maxsplit=1)[0]}...{symbols[index]}'
         sys.stdout.write(f'{txt} {main_row}')
         sys.stdout.flush()
         index += 1
@@ -73,3 +75,11 @@ def print_progress(event: Event, progress_type: str):
         if event.is_set():
             print(f'\n{end}', )
             break
+
+
+if __name__ == '__main__':
+    e = threading.Event()
+    x = threading.Thread(target=print_progress, args=(e, 'download'))
+    x.start()
+    time.sleep(30)
+    e.set()
