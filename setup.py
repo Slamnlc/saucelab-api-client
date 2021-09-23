@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='saucelab-api-client',
-    version='0.2',
+    version='0.2.1',
     use_scm_version=False,
     description='SauceLab Api Python Client',
     long_description=long_description,
