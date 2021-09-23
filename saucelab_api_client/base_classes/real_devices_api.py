@@ -1,3 +1,8 @@
+import json
+import os
+import random
+from datetime import datetime
+
 from saucelab_api_client.category import Base
 from saucelab_api_client.models.device import Device
 from saucelab_api_client.models.job import Job
@@ -6,6 +11,10 @@ from saucelab_api_client.models.service import compare_version
 
 class RealDevices(Base):
     __sub_host: str = '/v1/rdc'
+
+    def __init__(self, session):
+        super().__init__(session)
+        self.__cache = session._device_cache
 
     def devices_list(self) -> [Device]:
         """
@@ -74,11 +83,15 @@ class RealDevices(Base):
                        min_pixels_per_point=None, max_pixels_per_point=None, min_ram_size=None, max_ram_size=None,
                        min_resolution_height=None, max_resolution_height=None, min_resolution_width=None,
                        max_resolution_width=None, min_screen_size=None, max_screen_size=None, min_sd_card_size=None,
-                       max_sd_card_size=None, is_available=None
+                       max_sd_card_size=None, is_available=None, get_random_devices: int = None
                        ):
+        if get_random_devices is not None:
+            if not isinstance(get_random_devices, int):
+                raise ValueError('get_random_devices must be integer value')
         local_variables = locals()
         main_dict = {key: value for key, value in local_variables.items()
-                     if key not in ('self', 'local_variables', 'is_available') and '__py' not in key and value}
+                     if key not in ('self', 'local_variables', 'is_available', 'get_random_devices')
+                     and '__py' not in key and value}
         main_property = {key: value for key, value in main_dict.items()
                          if key[:3] not in ('max', 'min') and 'contains' not in key}
         min_property = {key[4:]: value for key, value in main_dict.items() if key[:3] == 'min'}
@@ -105,4 +118,30 @@ class RealDevices(Base):
                 return all((check_min, check_max, check_contains))
             return False
 
-        return tuple(filter(lambda x: device_filter(x), self.devices_list()))
+        result = list(filter(lambda x: device_filter(x), self.devices_list()))
+        if get_random_devices is None:
+            return result
+        else:
+            cache_device, need_update = None, False
+            if os.path.isfile(self.__cache):
+                cache_device = json.loads(open(self.__cache, 'r').read())
+            if cache_device is not None:
+                create_time = cache_device.get('create_time')
+                if create_time is not None:
+                    print((datetime.now() - datetime.fromtimestamp(create_time)).seconds)
+                    if (datetime.now() - datetime.fromtimestamp(create_time)).seconds > 3:
+                        need_update = True
+                    else:
+                        return [Device(json.loads(from_cache)) for from_cache in cache_device['devices']]
+            if cache_device is None or need_update:
+                devices, json_devices = [], []
+                for _ in range(get_random_devices):
+                    selected = random.choice(result)
+                    devices.append(selected), json_devices.append(selected.to_json())
+                    result.remove(selected)
+                write_json = json.dumps({
+                    'create_time': datetime.now().timestamp(),
+                    'devices': json_devices
+                })
+                open(self.__cache, 'w').write(write_json)
+                return devices

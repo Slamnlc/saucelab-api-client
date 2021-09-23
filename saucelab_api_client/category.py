@@ -2,6 +2,7 @@ from saucelab_api_client.session import Session
 
 
 class Base:
+
     def __init__(self, session):
         self._session: Session = session
 

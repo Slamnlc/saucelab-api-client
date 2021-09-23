@@ -1,4 +1,5 @@
 import json
+import os
 
 import requests
 
@@ -17,6 +18,7 @@ class Session:
         self.__host = host
         self._session = requests.Session()
         self._session.auth = (username, token)
+        self._device_cache = os.path.join(os.path.dirname(__file__), 'devices.json')
 
     def request(self, method: str, url: str, data: dict = None, params: dict = None, **kwargs):
         data = json.dumps(data) if data else ''
@@ -27,3 +29,7 @@ class Session:
             return response.content if 'download' in url else response.json()
         else:
             return f'Error: {response.status_code}: {response.reason} ({response.text})'
+
+    def __del__(self):
+        if os.path.isfile(self._device_cache):
+            os.remove(self._device_cache)

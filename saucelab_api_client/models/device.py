@@ -1,3 +1,6 @@
+import json
+
+
 class Device:
 
     def __init__(self, data: dict):
@@ -9,7 +12,7 @@ class Device:
             self.default_orientation: str = data.get('defaultOrientation')
             self.dpi: int = data.get('dpi')
             self.has_on_screen_buttons: bool = data.get('hasOnScreenButtons')
-            self.device_id: str = data.get('file_id')
+            self.device_id: str = data.get('id')
             self.internal_orientation: str = data.get('internalOrientation')
             self.internal_storage_size: int = data.get('internalStorageSize')
             self.is_arm: bool = data.get('isArm')
@@ -42,3 +45,6 @@ class Device:
 
     def __str__(self):
         return self.name
+
+    def to_json(self):
+        return json.dumps(self.__dict__)
