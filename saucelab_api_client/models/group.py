@@ -3,7 +3,7 @@ from saucelab_api_client.models.file import File
 
 class Group:
     def __init__(self, data: dict):
-        self.id: int = data.get('id')
+        self.group_id: int = data.get('file_id')
         self.name: str = data.get('name')
         self.recent: File = File(data.get('recent'))
         self.count: int = data.get('count')

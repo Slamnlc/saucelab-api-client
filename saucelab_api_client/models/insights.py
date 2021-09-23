@@ -1,5 +1,5 @@
-
-
 class Insight:
     def __init__(self, data: dict):
-        1==1
+        if data is not None:
+            # TODO: add insight api
+            pass

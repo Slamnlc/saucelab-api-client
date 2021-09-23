@@ -1,6 +1,6 @@
 import json
 
-import requests as requests
+import requests
 
 
 class Session:
@@ -20,8 +20,10 @@ class Session:
 
     def request(self, method: str, url: str, data: dict = None, params: dict = None, **kwargs):
         data = json.dumps(data) if data else ''
-        response = self._session.request(method=method, url=f"{self.__host}{url}", data=data, params=params, **kwargs)
+        self._session.headers.pop('Content-Type') if 'download' in url else \
+            self._session.headers.update({'Content-Type': 'application/json'})
+        response = self._session.request(method=method, url=f'{self.__host}{url}', data=data, params=params, **kwargs)
         if response.status_code in (200, 201):
-            return response.json()
+            return response.content if 'download' in url else response.json()
         else:
-            return f"Error: {response.status_code}: {response.reason}"
+            return f'Error: {response.status_code}: {response.reason} ({response.text})'
