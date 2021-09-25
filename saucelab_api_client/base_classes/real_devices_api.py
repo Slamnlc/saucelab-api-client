@@ -2,6 +2,7 @@ import json
 import os
 import random
 from datetime import datetime
+from typing import Union
 
 from saucelab_api_client.category import Base
 from saucelab_api_client.models.device import Device
@@ -26,7 +27,7 @@ class RealDevices(Base):
         """
         return [Device(device) for device in self._session.request('get', f'{self.__sub_host}/devices')]
 
-    def get_device_by_id(self, device_id: str) -> str or Device:
+    def get_device_by_id(self, device_id: str) -> Union[Device, str]:
         """
         https://docs.saucelabs.com/dev/api/rdc/#get-a-specific-device
 
@@ -56,7 +57,7 @@ class RealDevices(Base):
         params = {key: value for key, value in {'offset': offset, 'limit': limit}.items() if value}
         return self._valid(self._session.request('get', f'{self.__sub_host}/jobs', params=params), Job, key='entities')
 
-    def job_by_id(self, job_id: str) -> str or Job:
+    def job_by_id(self, job_id: str) -> Union[Job, str]:
         """
         https://docs.saucelabs.com/dev/api/rdc/#get-a-specific-real-device-job
 

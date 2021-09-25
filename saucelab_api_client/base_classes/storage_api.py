@@ -1,6 +1,8 @@
 import os
 from threading import Event, Thread
+from typing import Union
 
+from saucelab_api_client.base_classes.exceptions import WrongFileExtension
 from saucelab_api_client.category import Base
 from saucelab_api_client.models.file import File
 from saucelab_api_client.models.group import Group
@@ -8,7 +10,7 @@ from saucelab_api_client.models.service import print_progress
 
 
 class Storage(Base):
-    sub_host = '/v1/storage'
+    __sub_host = '/v1/storage'
 
     def files(self, q=None, kind=None, file_id=None, team_id=None, page=None, per_page=None) -> [File] or str:
         """
@@ -24,7 +26,7 @@ class Storage(Base):
         :return:
         """
         params = {key: value for key, value in locals().items() if key != 'self' and '__py' not in key and value}
-        return self._valid(self._session.request('get', f'{self.sub_host}/files', params=params), File, 'items')
+        return self._valid(self._session.request('get', f'{self.__sub_host}/files', params=params), File, 'items')
 
     def file_by_id(self, file_id: str) -> File:
         """
@@ -34,15 +36,20 @@ class Storage(Base):
         """
         return self.files(file_id=file_id)[0]
 
-    def file_by_bundle_id(self, bundle_id: str) -> [File]:
+    def file_by_bundle_id(self, bundle_id: str, get_last: bool = True) -> File or [File]:
         """
         Get File objects
         :param bundle_id:
-        :return: [File]
+        :param get_last: return last uploaded file
+        :return: File or [File]
         """
-        return [app for app in self.files() if app.metadata.identifier == bundle_id]
+        result = list(app for app in self.files() if app.metadata.identifier == bundle_id)
+        if get_last:
+            return max(result, key=lambda file: file.upload_timestamp)
+        else:
+            return result
 
-    def groups(self, q=None, kind=None, group_id=None, page=None, per_page=None) -> str or [Group]:
+    def groups(self, q=None, kind=None, group_id=None, page=None, per_page=None) -> Union[Group, str]:
         """
         https://docs.saucelabs.com/dev/api/storage/#get-app-storage-groups
 
@@ -56,9 +63,9 @@ class Storage(Base):
         :return:
         """
         params = {key: value for key, value in locals().items() if key != 'self' and '__py' not in key and value}
-        return self._valid(self._session.request('get', f'{self.sub_host}/groups', params=params), Group, 'items')
+        return self._valid(self._session.request('get', f'{self.__sub_host}/groups', params=params), Group, 'items')
 
-    def upload(self, app_path: str) -> File:
+    def upload(self, app_path: str) -> Union[File, str]:
         """
         https://docs.saucelabs.com/dev/api/storage/#upload-file-to-app-storage
 
@@ -73,13 +80,14 @@ class Storage(Base):
             thread = Thread(target=print_progress, args=(exit_event, 'upload'))
             thread.start()
             files = {'payload': open(app_path, 'rb')}
-            response = self._valid(self._session.request('post', f'{self.sub_host}/upload', files=files), File, 'item')
+            response = self._valid(self._session.request('post', f'{self.__sub_host}/upload', files=files), File,
+                                   'item')
             if str(response).startswith('Error'):
                 print(f'Upload error\n{response}')
             exit_event.set()
             return response
         else:
-            raise FileNotFoundError('File to send must have following extension: apk, aab, ipa, zip')
+            raise WrongFileExtension('File to send must have following extension: apk, aab, ipa, zip')
 
     def download_file(self, file_id: str, file_path: str, file_name: str = None):
         """
@@ -105,11 +113,11 @@ class Storage(Base):
                 os.remove(path)
             thread = Thread(target=print_progress, args=(exit_event, 'download'))
             thread.start()
-            response = self._session.request('get', f'{self.sub_host}/download/{file_id}')
+            response = self._session.request('get', f'{self.__sub_host}/download/{file_id}')
             exit_event.set()
             open(path, 'wb').write(response)
 
-    def edit_description(self, file_id: str, new_description: str) -> str or File:
+    def edit_description(self, file_id: str, new_description: str) -> Union[File, str]:
         """
         https://docs.saucelabs.com/dev/api/storage/#edit-a-stored-files-description
 
@@ -120,9 +128,9 @@ class Storage(Base):
         """
 
         data = {'item': {'description': new_description}}
-        return self._valid(self._session.request('put', f'{self.sub_host}/files/{file_id}', data=data), File, 'item')
+        return self._valid(self._session.request('put', f'{self.__sub_host}/files/{file_id}', data=data), File, 'item')
 
-    def delete_by_file_id(self, file_id: str) -> File:
+    def delete_by_file_id(self, file_id: str) -> Union[File, str]:
         """
         https://docs.saucelabs.com/dev/api/storage/#delete-an-app-storage-file
 
@@ -130,7 +138,7 @@ class Storage(Base):
         :param file_id: The Sauce Labs identifier of the stored file
         :return:
         """
-        return self._valid(self._session.request('delete', f'{self.sub_host}/files/{file_id}'), File, 'item')
+        return self._valid(self._session.request('delete', f'{self.__sub_host}/files/{file_id}'), File, 'item')
 
     def delete_all_files_by_bundle_id(self, bundle_id: str) -> [File]:
         """
@@ -149,4 +157,4 @@ class Storage(Base):
         :param group_id: The Sauce Labs identifier of the group of files
         :return: None
         """
-        self._session.request('delete', f'{self.sub_host}/files/{group_id}')
+        self._session.request('delete', f'{self.__sub_host}/files/{group_id}')

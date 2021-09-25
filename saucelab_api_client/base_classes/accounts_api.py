@@ -1,5 +1,6 @@
-from typing import Optional
+from typing import Union
 
+from saucelab_api_client.base_classes.exceptions import MissingArguments
 from saucelab_api_client.category import Base
 from saucelab_api_client.models.accounts import TeamSearch, Team, UserSearch, User
 from saucelab_api_client.models.service import validate_dict
@@ -19,7 +20,7 @@ class Accounts(Base):
 class AccountTeam(Base):
     __sub_host = '/team-management/v1'
 
-    def teams(self, team_name: Optional[str] = None) -> [TeamSearch] or str:
+    def teams(self, team_name: str = None) -> Union[TeamSearch, str]:
         """
         https://docs.saucelabs.com/dev/api/accounts/#lookup-teams
 
@@ -34,7 +35,7 @@ class AccountTeam(Base):
         return self._valid(self._session.request('get', f'{self.__sub_host}/teams/', params=params), TeamSearch,
                            'results')
 
-    def get_team(self, team_id: str) -> Team or str:
+    def get_team(self, team_id: str) -> Union[Team, str]:
         """
         https://docs.saucelabs.com/dev/api/accounts/#get-a-specific-team
 
@@ -44,7 +45,7 @@ class AccountTeam(Base):
         """
         return self._valid(self._session.request('get', f'{self.__sub_host}/teams/{team_id}'), Team)
 
-    def create_team(self, name: str, organization: str, settings: dict, description: str = None):
+    def create_team(self, name: str, organization: str, settings: dict, description: str = None) -> Team:
         """
         https://docs.saucelabs.com/dev/api/accounts/#create-a-team
 
@@ -79,7 +80,7 @@ class AccountTeam(Base):
         """
         self._session.request('delete', f'{self.__sub_host}/teams/{team_id}')
 
-    def update_team(self, team_id: str, name: str, settings: dict, description: str = None) -> Team:
+    def update_team(self, team_id: str, name: str, settings: dict, description: str = None) -> Union[Team, str]:
         """
         https://docs.saucelabs.com/dev/api/accounts/#update-a-team
 
@@ -107,7 +108,7 @@ class AccountTeam(Base):
         return self._valid(self._session.request('put', f'{self.__sub_host}/teams/{team_id}', data=data), Team)
 
     def partially_update_team(self, team_id: str = None, name: str = None, settings: dict = None,
-                              description: str = None) -> Team:
+                              description: str = None) -> Union[Team, str]:
         """
         https://docs.saucelabs.com/dev/api/accounts/#partially-update-a-team
 
@@ -127,10 +128,10 @@ class AccountTeam(Base):
             validate_dict(settings, ('virtual_machines', 'real_devices', 'live_only'), soft_check=True)
         data = {key: value for key, value in locals().items() if key in ('team_id', 'name', 'settings', 'description')}
         if len(data.keys()) == 0:
-            raise ValueError('Missing any arguments')
+            raise MissingArguments('Missing any arguments')
         return self._valid(self._session.request('patch', f'{self.__sub_host}/teams/{team_id}/', data=data), Team)
 
-    def list_team_members(self, team_id: str) -> [UserSearch] or str:
+    def list_team_members(self, team_id: str) -> Union[UserSearch, str]:
         """
         https://docs.saucelabs.com/dev/api/accounts/#list-team-members
 
@@ -186,7 +187,7 @@ class AccountUser(Base):
         return self._valid(self._session.request('get', f'{self.__sub_host}/users/', params=params), UserSearch,
                            'results')
 
-    def get_user(self, user_id: str) -> User or str:
+    def get_user(self, user_id: str) -> Union[User, str]:
         """
         https://docs.saucelabs.com/dev/api/accounts/#get-a-specific-user
 
@@ -197,7 +198,7 @@ class AccountUser(Base):
         return self._valid(self._session.request('get', f'{self.__sub_host}/users/{user_id}'), User)
 
     def create(self, email: str, username: str, password: str, first_name: str = None, last_name: str = None,
-               organization: str = None, role: str = None, team: str = None) -> User:
+               organization: str = None, role: str = None, team: str = None) -> Union[User, str]:
         """
         https://docs.saucelabs.com/dev/api/accounts/#create-a-new-user
 
@@ -216,7 +217,7 @@ class AccountUser(Base):
         data = {key: value for key, value in locals().items() if key != 'self' and '__py' not in key and value}
         return self._valid(self._session.request('post', f'{self.__sub_host}/users/', data=data), User)
 
-    def update_user(self, user_id: str, first_name: str, last_name: str, email: str, password: str) -> User or str:
+    def update_user(self, user_id: str, first_name: str, last_name: str, email: str, password: str) -> Union[User, str]:
         """
         https://docs.saucelabs.com/dev/api/accounts/#update-a-user
 
@@ -235,7 +236,7 @@ class AccountUser(Base):
         return self._valid(self._session.request('put', f'{self.__sub_host}/users/{user_id}', data=data), User)
 
     def partially_update_user(self, user_id: str, first_name: str = None, last_name: str = None, email: str = None,
-                              password: str = None) -> User or str:
+                              password: str = None) -> Union[User, str]:
         """
         https://docs.saucelabs.com/dev/api/accounts/#partially-update-a-user
 
@@ -252,7 +253,7 @@ class AccountUser(Base):
         if 'password' in data:
             data['verify_password'] = password
         if len(data.keys()) == 0:
-            raise ValueError('Missing any arguments')
+            raise MissingArguments('Missing any arguments')
         return self._valid(self._session.request('patch', f'{self.__sub_host}/users/{user_id}', data=data), User)
 
     def get_user_concurrency(self, username: str) -> dict:

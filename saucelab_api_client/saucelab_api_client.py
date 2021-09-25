@@ -4,6 +4,7 @@ from saucelab_api_client.base_classes.job_api import JobsApi
 from saucelab_api_client.base_classes.performance_api import PerformanceApi
 from saucelab_api_client.base_classes.platform_api import Platform
 from saucelab_api_client.base_classes.real_devices_api import RealDevices
+from saucelab_api_client.base_classes.sauce_connect_api import SauceConnectApi
 from saucelab_api_client.base_classes.storage_api import Storage
 from saucelab_api_client.session import Session
 
@@ -37,3 +38,7 @@ class SauceLab(Session):
     @property
     def performance(self):
         return PerformanceApi(self)
+
+    @property
+    def sauce_connect(self):
+        return SauceConnectApi(self)

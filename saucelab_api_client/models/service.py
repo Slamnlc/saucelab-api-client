@@ -1,7 +1,6 @@
+import base64
 import random
 import sys
-import threading
-import time
 from datetime import datetime
 from threading import Event
 from time import sleep
@@ -37,6 +36,19 @@ def validate_dict(dict_to_check: dict, example: (tuple, list), soft_check: bool 
         if len(error_message) != 0:
             raise KeyError('\n'.join(error_message))
     return True
+
+
+class Auth:
+    def __init__(self, username, password):
+        self.data = base64.b64encode(b':'.join((username.encode('ascii'),
+                                                password.encode('ascii')))).strip().decode('ascii')
+
+    def __call__(self, r):
+        r.headers['Authorization'] = f'Basic {self.data}'
+        return r
+
+    def __del__(self):
+        return 'BasicAuth'
 
 
 def print_progress(event: Event, progress_type: str):
@@ -75,11 +87,3 @@ def print_progress(event: Event, progress_type: str):
         if event.is_set():
             print(f'\n{end}', )
             break
-
-
-if __name__ == '__main__':
-    e = threading.Event()
-    x = threading.Thread(target=print_progress, args=(e, 'download'))
-    x.start()
-    time.sleep(30)
-    e.set()
