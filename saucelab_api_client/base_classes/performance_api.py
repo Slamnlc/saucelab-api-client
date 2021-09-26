@@ -3,7 +3,7 @@ from saucelab_api_client.models.performance import Performance, PerformanceJob
 
 
 class PerformanceApi(Base):
-    __sub_host = '/v2/performance/metrics/'
+    __sub_host = '/v2/performance/metrics'
 
     def get_performance_test_results(self, page_url: str = None, metric_names: str = None, start_date: str = None,
                                      end_date: str = None):
@@ -18,8 +18,8 @@ class PerformanceApi(Base):
         :param end_date: Filter results based on tests run on or before this date
         :return:
         """
-        params = {key: value for key, value in locals().items() if value}
-        return self._valid(self._session.request('get', self.__sub_host, params=params), Performance, 'items')
+        params = {key: value for key, value in locals().items() if value is not None and key != 'self'}
+        return self._valid(self._session.request('get', f'{self.__sub_host}/', params=params), Performance, 'items')
 
     def get_performance_test_results_for_test(self, job_id: str, full: bool = True):
         """

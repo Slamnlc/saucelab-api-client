@@ -87,3 +87,51 @@ def print_progress(event: Event, progress_type: str):
         if event.is_set():
             print(f'\n{end}', )
             break
+
+
+def replace_html_tags(string_to_clear: str) -> str:
+    html_tags = ['<!--...-->', '<!doctype>', '<a>', '<abbr>', '<acronym>', '<address>', '<applet>', '<area>',
+                 '<article>', '<aside>', '<audio>', '<b>', '<base>', '<basefont>', '<bb>', '<bdo>', '<big>',
+                 '<blockquote>', '<body>', '<br/>', '<button>', '<canvas>', '<caption>', '<center>', '<cite>',
+                 '<code>', '<col>', '<colgroup>', '<command>', '<datagrid>', '<datalist>', '<dd>', '<del>',
+                 '<details>', '<dfn>', '<dialog>', '<dir>', '<div>', '<dl>', '<dt>', '<em>', '<embed>',
+                 '<eventsource>', '<fieldset>', '<figcaption>', '<figure>', '<font>', '<footer>', '<form>', '<frame>',
+                 '<frameset>', '<h1>', '<h2>', '<h3>', '<h4>', '<h5>', '<h6>', '<head>', '<header>', '<hgroup>',
+                 '<hr/>', '<html>', '<i>', '<iframe>', '<img>', '<input>', '<ins>', '<isindex>', '<kbd>', '<keygen>',
+                 '<label>', '<legend>', '<li>', '<link>', '<map>', '<mark>', '<menu>', '<meta>', '<meter>', '<nav>',
+                 '<noframes>', '<noscript>', '<object>', '<ol>', '<optgroup>', '<option>', '<output>', '<p>',
+                 '<param>', '<pre>', '<progress>', '<q>', '<rp>', '<rt>', '<ruby>', '<s>', '<samp>', '<script>',
+                 '<section>', '<select>', '<small>', '<source>', '<span>', '<strike>', '<strong>', '<style>', '<sub>',
+                 '<sup>', '<table>', '<tbody>', '<td>', '<textarea>', '<tfoot>', '<th>', '<thead>', '<time>', '<title>',
+                 '<tr>', '<track>', '<tt>', '<u>', '<ul>', '<var>', '<video>', '<wbr>', '</a>', '</abbr>', '</acronym>',
+                 '</address>', '</applet>', '</area>', '</article>', '</aside>', '</audio>', '</b>', '</base>',
+                 '</basefont>', '</bb>', '</bdo>', '</big>', '</blockquote>', '</body>', '</br/>', '</button>',
+                 '</canvas>', '</caption>', '</center>', '</cite>', '</code>', '</col>', '</colgroup>', '</command>',
+                 '</datagrid>', '</datalist>', '</dd>', '</del>', '</details>', '</dfn>', '</dialog>', '</dir>',
+                 '</div>', '</dl>', '</dt>', '</em>', '</embed>', '</eventsource>', '</fieldset>', '</figcaption>',
+                 '</figure>', '</font>', '</footer>', '</form>', '</frame>', '</frameset>',
+                 '</h1>', '</h2>', '</h3>', '</h4>', '</h5>', '</h6>', '</head>', '</header>', '</hgroup>', '</hr/>',
+                 '</html>', '</i>', '</iframe>', '</img>', '</input>', '</ins>', '</isindex>', '</kbd>', '</keygen>',
+                 '</label>', '</legend>', '</li>', '</link>', '</map>', '</mark>', '</menu>', '</meta>', '</meter>',
+                 '</nav>', '</noframes>', '</noscript>', '</object>', '</ol>', '</optgroup>', '</option>', '</output>',
+                 '</p>', '</param>', '</pre>', '</progress>', '</q>', '</rp>', '</rt>', '</ruby>', '</s>', '</samp>',
+                 '</script>', '</section>', '</select>', '</small>', '</source>', '</span>', '</strike>', '</strong>',
+                 '</style>', '</sub>', '</sup>', '</table>', '</tbody>', '</td>', '</textarea>', '</tfoot>', '</th>',
+                 '</thead>', '</time>', '</title>', '</tr>', '</track>', '</tt>', '</u>', '</ul>', '</var>', '</video>',
+                 '</wbr>']
+    for tag in html_tags:
+        string_to_clear = string_to_clear.replace(tag, '')
+    return string_to_clear
+
+
+def get_dict_from_locals(locals_dict: dict, replace_underscore: bool = False) -> dict:
+    return {key.replace('_', '-') if replace_underscore else key: value for key, value in locals_dict.items()
+            if key != 'self' and '__py' not in key and value is not None}
+
+
+def get_datetime_for_insights(start, end) -> (datetime, datetime):
+    if not isinstance(start, datetime):
+        raise ValueError('Start time must be datetime')
+    if not isinstance(start, datetime):
+        raise ValueError('End time must be datetime')
+    return start.strftime('%Y-%m-%dT%H:%M:%SZ'), end.strftime('%Y-%m-%dT%H:%M:%SZ')

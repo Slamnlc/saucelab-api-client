@@ -26,7 +26,8 @@ class Session:
         if self.__host[-1] == '/':
             self.__host = self.__host[:-1]
 
-    def request(self, method: str, url: str, data: dict = None, params: dict = None, **kwargs):
+    def request(self, method: str, url: str, data: dict = None, params: dict = None,
+                return_type: str = False, **kwargs):
         data = json.dumps(data) if data else ''
         if 'download' in url or 'upload' in url:
             self._session.headers.pop('Content-Type', None)
@@ -34,7 +35,12 @@ class Session:
             self._session.headers.update({'Content-Type': 'application/json'})
         response = self._session.request(method=method, url=f'{self.__host}{url}', data=data, params=params, **kwargs)
         if response.status_code in (200, 201):
-            return response.content if 'download' in url else response.json()
+            if return_type == 'text':
+                return response.text
+            elif return_type == 'content':
+                return response.content
+            else:
+                return response.json()
         else:
             return f'Error: {response.status_code}: {response.reason} ({response.text})'
 

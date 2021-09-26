@@ -1,11 +1,16 @@
+from datetime import datetime
+
 from saucelab_api_client.category import Base
+from saucelab_api_client.models.insights import Insight
+from saucelab_api_client.models.service import get_dict_from_locals, get_datetime_for_insights
 
 
 class Insights(Base):
     __sub_host = '/v1/analytics'
 
-    def test_results(self, start_time, end_time, scope=None, owner=None, status=None, build=None, from_=None,
-                     max_results=None, missing_build=None, query=None, desc=None, error=None):
+    def test_results(self, start_time: datetime, end_time: datetime, scope=None, owner=None, status=None, build=None,
+                     from_=None, max_results=None, missing_build=None, query=None, desc=None,
+                     error=None) -> list[Insight]:
         """
         https://docs.saucelabs.com/dev/api/insights/#get-test-results
 
@@ -28,12 +33,31 @@ class Insights(Base):
         :param error: Limit results to only those that threw this error message
         :return:
         """
-        main_dict = {
-            'start': start_time, 'end': end_time, 'scope': scope, 'owner': owner, 'status': status,
-            'build': build, 'from': from_, 'mainDocumentTransferSize': max_results, 'missing_build': missing_build,
-            'query': query, 'desc': desc, 'error': error
-        }
+        start_time, end_time = get_datetime_for_insights(start_time, end_time)
+        params = get_dict_from_locals(locals())
 
-        params = {key: value for key, value in main_dict.items() if main_dict[key] is not None}
+        return self._valid(self._session.request('get', f'{self.__sub_host}/tests', params=params), Insight, 'items')
 
-        return self._session.request('get', f'{self.__sub_host}/tests', params=params)
+    def get_summary_of_test_metric(self, start: datetime, end: datetime, scope=None, owner=None, status=None,
+                                   query=None, os=None, browser=None):
+        """
+        https://docs.saucelabs.com/dev/api/insights/#get-summary-of-test-metrics
+
+        Returns an aggregate of metric values for runs of a specified test during the specified time period
+         :param start: The starting date of the period during which the test runs executed, in YYY-MM-DDTHH:MM:SSZ
+                            or Unix time format.
+        :param end: The ending date of the period during which the test runs executed, in YYY-MM-DDTHH:MM:SSZ
+                            or Unix time format.
+        :param scope: Specifies the scope of the owner parameter
+        :param owner: The name of one or more users in the requestor's organization who executed the requested tests.
+                            This parameter is required if the scope parameter is set to single.
+        :param status: Limit results to only those with a specified status
+        :param query: The name of the test for which results are requested
+        :param os: Limit results to only those run on the specified operating systems
+        :param browser: Limit results to only those run on the specified browsers
+        :return:
+        """
+        start, end = get_datetime_for_insights(start, end)
+        params = get_dict_from_locals(locals())
+
+        return self._session.request('get', f'{self.__sub_host}/insights/test-metrics', params=params)

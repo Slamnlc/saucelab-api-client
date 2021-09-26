@@ -47,6 +47,7 @@ saucelab = SauceLab()
 ```
 
 3. You can set environment variables:
+
 - SAUCELAB_USERNAME
 - SAUCELAB_TOKEN
 - SAUCELAB_HOST
@@ -65,6 +66,7 @@ saucelab = SauceLab()
     - platform
     - real devices
     - real devices jobs
+    - jobs
     - storage
     - sauce connect
 - Powerful device filter - saucelab.devices.filter_devices()
@@ -73,7 +75,6 @@ saucelab = SauceLab()
 **TODO**
 
 - Add support:
-    - jobs
     - insights
     - performance
 

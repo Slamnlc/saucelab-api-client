@@ -3,7 +3,7 @@ from typing import Union
 from saucelab_api_client.base_classes.exceptions import MissingArguments
 from saucelab_api_client.category import Base
 from saucelab_api_client.models.accounts import TeamSearch, Team, UserSearch, User
-from saucelab_api_client.models.service import validate_dict
+from saucelab_api_client.models.service import validate_dict, get_dict_from_locals
 
 
 class Accounts(Base):
@@ -20,7 +20,7 @@ class Accounts(Base):
 class AccountTeam(Base):
     __sub_host = '/team-management/v1'
 
-    def teams(self, team_name: str = None) -> Union[TeamSearch, str]:
+    def teams(self, team_name: str = None) -> TeamSearch:
         """
         https://docs.saucelabs.com/dev/api/accounts/#lookup-teams
 
@@ -35,7 +35,7 @@ class AccountTeam(Base):
         return self._valid(self._session.request('get', f'{self.__sub_host}/teams/', params=params), TeamSearch,
                            'results')
 
-    def get_team(self, team_id: str) -> Union[Team, str]:
+    def get_team(self, team_id: str) -> Team:
         """
         https://docs.saucelabs.com/dev/api/accounts/#get-a-specific-team
 
@@ -80,7 +80,7 @@ class AccountTeam(Base):
         """
         self._session.request('delete', f'{self.__sub_host}/teams/{team_id}')
 
-    def update_team(self, team_id: str, name: str, settings: dict, description: str = None) -> Union[Team, str]:
+    def update_team(self, team_id: str, name: str, settings: dict, description: str = None) -> Team:
         """
         https://docs.saucelabs.com/dev/api/accounts/#update-a-team
 
@@ -108,7 +108,7 @@ class AccountTeam(Base):
         return self._valid(self._session.request('put', f'{self.__sub_host}/teams/{team_id}', data=data), Team)
 
     def partially_update_team(self, team_id: str = None, name: str = None, settings: dict = None,
-                              description: str = None) -> Union[Team, str]:
+                              description: str = None) -> Team:
         """
         https://docs.saucelabs.com/dev/api/accounts/#partially-update-a-team
 
@@ -131,7 +131,7 @@ class AccountTeam(Base):
             raise MissingArguments('Missing any arguments')
         return self._valid(self._session.request('patch', f'{self.__sub_host}/teams/{team_id}/', data=data), Team)
 
-    def list_team_members(self, team_id: str) -> Union[UserSearch, str]:
+    def list_team_members(self, team_id: str) -> UserSearch:
         """
         https://docs.saucelabs.com/dev/api/accounts/#list-team-members
 
@@ -159,7 +159,7 @@ class AccountUser(Base):
     __sub_host = '/team-management/v1'
 
     def all_users(self, username: str = None, teams: str = None, team_name: str = None, roles: int = None,
-                  phrase: str = None, status: str = None, limit: int = None, offset: int = None) -> [UserSearch]:
+                  phrase: str = None, status: str = None, limit: int = None, offset: int = None) -> list[UserSearch]:
         """
         https://docs.saucelabs.com/dev/api/accounts/#lookup-users
 
@@ -183,11 +183,11 @@ class AccountUser(Base):
         :param offset: The starting record number from which to return results
         :return:
         """
-        params = {key: value for key, value in locals().items() if key != 'self' and '__py' not in key and value}
+        params = get_dict_from_locals(locals())
         return self._valid(self._session.request('get', f'{self.__sub_host}/users/', params=params), UserSearch,
                            'results')
 
-    def get_user(self, user_id: str) -> Union[User, str]:
+    def get_user(self, user_id: str) -> User:
         """
         https://docs.saucelabs.com/dev/api/accounts/#get-a-specific-user
 
@@ -198,7 +198,7 @@ class AccountUser(Base):
         return self._valid(self._session.request('get', f'{self.__sub_host}/users/{user_id}'), User)
 
     def create(self, email: str, username: str, password: str, first_name: str = None, last_name: str = None,
-               organization: str = None, role: str = None, team: str = None) -> Union[User, str]:
+               organization: str = None, role: str = None, team: str = None) -> User:
         """
         https://docs.saucelabs.com/dev/api/accounts/#create-a-new-user
 
@@ -214,10 +214,10 @@ class AccountUser(Base):
         :param team: The identifier of the team of which the new user is a member
         :return:
         """
-        data = {key: value for key, value in locals().items() if key != 'self' and '__py' not in key and value}
+        data = get_dict_from_locals(locals())
         return self._valid(self._session.request('post', f'{self.__sub_host}/users/', data=data), User)
 
-    def update_user(self, user_id: str, first_name: str, last_name: str, email: str, password: str) -> Union[User, str]:
+    def update_user(self, user_id: str, first_name: str, last_name: str, email: str, password: str) -> User:
         """
         https://docs.saucelabs.com/dev/api/accounts/#update-a-user
 
@@ -230,13 +230,12 @@ class AccountUser(Base):
         :param password: A login password for the new user
         :return: User or str
         """
-        data = {key: value for key, value in locals().items()
-                if key not in ('self', 'user_id') and '__py' not in key and value}
+        data = get_dict_from_locals(locals())
         data['verify_password'] = password
         return self._valid(self._session.request('put', f'{self.__sub_host}/users/{user_id}', data=data), User)
 
     def partially_update_user(self, user_id: str, first_name: str = None, last_name: str = None, email: str = None,
-                              password: str = None) -> Union[User, str]:
+                              password: str = None) -> User:
         """
         https://docs.saucelabs.com/dev/api/accounts/#partially-update-a-user
 
@@ -248,8 +247,7 @@ class AccountUser(Base):
         :param password: A login password for the new user
         :return:
         """
-        data = {key: value for key, value in locals().items()
-                if key not in ('self', 'user_id') and '__py' not in key and value}
+        data = get_dict_from_locals(locals())
         if 'password' in data:
             data['verify_password'] = password
         if len(data.keys()) == 0:

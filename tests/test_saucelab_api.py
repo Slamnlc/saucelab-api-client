@@ -6,8 +6,8 @@ from parameterized import parameterized
 
 from saucelab_api_client.models.accounts import TeamSearch, UserSearch
 from saucelab_api_client.models.file import File
-from saucelab_api_client.models.job import Job
-from saucelab_api_client.models.platform import Status, AppiumPlatform, WebDriverPlatform
+from saucelab_api_client.models.real_device_job import RealDeviceJob
+from saucelab_api_client.models.platform_ import Status, AppiumPlatform, WebDriverPlatform
 from saucelab_api_client.saucelab_api_client import SauceLab
 
 
@@ -59,7 +59,7 @@ class DeviceTests(MainSauceLab):
                                      for device in filter_devices)))
 
     def test_jobs(self):
-        self.assertTrue(all((isinstance(job, Job) for job in self.jobs)))
+        self.assertTrue(all((isinstance(job, RealDeviceJob) for job in self.jobs)))
 
     def test_job_by_id(self):
         self.assertEqual(self.random_job.job_id, self.sauce_lab.devices.job_by_id(self.random_job.job_id).job_id)

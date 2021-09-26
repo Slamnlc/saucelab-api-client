@@ -2,13 +2,13 @@ from datetime import datetime
 from typing import Union
 
 from saucelab_api_client.category import Base
-from saucelab_api_client.models.platform import Status, WebDriverPlatform, AppiumPlatform
+from saucelab_api_client.models.platform_ import Status, WebDriverPlatform, AppiumPlatform
 
 
 class Platform(Base):
     __sub_host = '/rest/v1/info'
 
-    def get_status(self) -> Union[Status, str]:
+    def get_status(self) -> Status:
         """
         https://docs.saucelabs.com/dev/api/platform/#get-sauce-labs-teststatus
 

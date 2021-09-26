@@ -2,11 +2,10 @@ import json
 import os
 import random
 from datetime import datetime
-from typing import Union
 
 from saucelab_api_client.category import Base
 from saucelab_api_client.models.device import Device
-from saucelab_api_client.models.job import Job
+from saucelab_api_client.models.real_device_job import RealDeviceJob
 from saucelab_api_client.models.service import compare_version
 
 
@@ -17,7 +16,7 @@ class RealDevices(Base):
         super().__init__(session)
         self.__cache = session._device_cache
 
-    def devices_list(self) -> [Device]:
+    def devices_list(self) -> list[Device]:
         """
         https://docs.saucelabs.com/dev/api/rdc/#get-devices
 
@@ -27,7 +26,7 @@ class RealDevices(Base):
         """
         return [Device(device) for device in self._session.request('get', f'{self.__sub_host}/devices')]
 
-    def get_device_by_id(self, device_id: str) -> Union[Device, str]:
+    def get_device_by_id(self, device_id: str) -> Device:
         """
         https://docs.saucelabs.com/dev/api/rdc/#get-a-specific-device
 
@@ -37,7 +36,7 @@ class RealDevices(Base):
         """
         return self._valid(self._session.request('get', f'{self.__sub_host}/devices/{device_id}'), Device)
 
-    def available_devices(self) -> [str]:
+    def available_devices(self) -> list[str]:
         """
         https://docs.saucelabs.com/dev/api/rdc/#get-a-specific-device
 
@@ -45,7 +44,7 @@ class RealDevices(Base):
         """
         return self._session.request('get', f'{self.__sub_host}/devices/available')
 
-    def jobs(self, offset: int = None, limit: int = None) -> str or [Job]:
+    def jobs(self, offset: int = None, limit: int = None) -> RealDeviceJob:
         """
         https://docs.saucelabs.com/dev/api/rdc/#get-real-device-jobs
 
@@ -55,9 +54,10 @@ class RealDevices(Base):
         :return:
         """
         params = {key: value for key, value in {'offset': offset, 'limit': limit}.items() if value}
-        return self._valid(self._session.request('get', f'{self.__sub_host}/jobs', params=params), Job, key='entities')
+        return self._valid(self._session.request('get', f'{self.__sub_host}/jobs', params=params), RealDeviceJob,
+                           key='entities')
 
-    def job_by_id(self, job_id: str) -> Union[Job, str]:
+    def job_by_id(self, job_id: str) -> RealDeviceJob:
         """
         https://docs.saucelabs.com/dev/api/rdc/#get-a-specific-real-device-job
 
@@ -66,7 +66,7 @@ class RealDevices(Base):
         :return:
         """
         # return self._session.request('get', f'{self.__sub_host}/jobs/{job_id}')
-        return self._valid(self._session.request('get', f'{self.__sub_host}/jobs/{job_id}'), return_class=Job)
+        return self._valid(self._session.request('get', f'{self.__sub_host}/jobs/{job_id}'), return_class=RealDeviceJob)
 
     def filter_devices(self, abi_type=None, api_level=None, cpu_cores=None, cpu_frequency=None, cpu_type=None,
                        default_orientation=None, device_family=None, dpi=None, dpi_name=None,

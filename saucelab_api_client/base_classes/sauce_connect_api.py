@@ -23,7 +23,7 @@ class SauceConnectApi(Base):
         """
         return self._session.request('get', f'{self.__sub_host}/{username}/tunnels')
 
-    def get_tunnel_information(self, username: str, tunnel_id: str) -> Union[Tunnel, str]:
+    def get_tunnel_information(self, username: str, tunnel_id: str) -> Tunnel:
         """
         https://docs.saucelabs.com/dev/api/connect/#get-tunnel-information
 
@@ -34,7 +34,7 @@ class SauceConnectApi(Base):
         """
         return self._valid(self._session.request('get', f'{self.__sub_host}/{username}/tunnels/{tunnel_id}'), Tunnel)
 
-    def get_current_jobs_for_tunnel(self, username: str, tunnel_id: str) -> Union[TunnelJobs, str]:
+    def get_current_jobs_for_tunnel(self, username: str, tunnel_id: str) -> TunnelJobs:
         """
         https://docs.saucelabs.com/dev/api/connect/#get-current-jobs-for-a-tunnel
 
@@ -46,7 +46,7 @@ class SauceConnectApi(Base):
         return self._valid(self._session.request('get', f'{self.__sub_host}/{username}/tunnels/{tunnel_id}/num_jobs'),
                            TunnelJobs)
 
-    def stop_tunnel(self, username: str, tunnel_id: str) -> Union[StoppedTunnel, str]:
+    def stop_tunnel(self, username: str, tunnel_id: str) -> StoppedTunnel:
         """
         https://docs.saucelabs.com/dev/api/connect/#stop-a-tunnel
 
