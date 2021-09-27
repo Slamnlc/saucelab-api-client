@@ -59,7 +59,7 @@ from saucelab_api_client.saucelab_api_client import SauceLab
 saucelab = SauceLab()
 ```
 
-**Features in version: 0.3**
+**Features in version: 0.4**
 
 - Supported api:
     - accounts
@@ -75,7 +75,6 @@ saucelab = SauceLab()
 **TODO**
 
 - Add support:
-    - insights
     - performance
 
 **Usage examples**

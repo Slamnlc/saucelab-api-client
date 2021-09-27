@@ -8,16 +8,16 @@ from saucelab_api_client.models.service import get_dict_from_locals, get_datetim
 class Insights(Base):
     __sub_host = '/v1/analytics'
 
-    def test_results(self, start_time: datetime, end_time: datetime, scope=None, owner=None, status=None, build=None,
+    def test_results(self, start: datetime, end: datetime, scope=None, owner=None, status=None, build=None,
                      from_=None, max_results=None, missing_build=None, query=None, desc=None,
                      error=None) -> list[Insight]:
         """
         https://docs.saucelabs.com/dev/api/insights/#get-test-results
 
         Returns run data for all tests that match the request criteria
-        :param start_time: The starting date of the period during which the test runs executed, in YYY-MM-DDTHH:MM:SSZ
+        :param start: The starting date of the period during which the test runs executed, in YYY-MM-DDTHH:MM:SSZ
                             or Unix time format.
-        :param end_time: The ending date of the period during which the test runs executed, in YYY-MM-DDTHH:MM:SSZ
+        :param end: The ending date of the period during which the test runs executed, in YYY-MM-DDTHH:MM:SSZ
                             or Unix time format.
         :param scope: Specifies the scope of the owner parameter
         :param owner: The name of one or more users in the requestor's organization who executed the requested tests.
@@ -33,7 +33,7 @@ class Insights(Base):
         :param error: Limit results to only those that threw this error message
         :return:
         """
-        start_time, end_time = get_datetime_for_insights(start_time, end_time)
+        start, end = get_datetime_for_insights(start, end)
         params = get_dict_from_locals(locals())
 
         return self._valid(self._session.request('get', f'{self.__sub_host}/tests', params=params), Insight, 'items')
@@ -44,7 +44,7 @@ class Insights(Base):
         https://docs.saucelabs.com/dev/api/insights/#get-summary-of-test-metrics
 
         Returns an aggregate of metric values for runs of a specified test during the specified time period
-         :param start: The starting date of the period during which the test runs executed, in YYY-MM-DDTHH:MM:SSZ
+        :param start: The starting date of the period during which the test runs executed, in YYY-MM-DDTHH:MM:SSZ
                             or Unix time format.
         :param end: The ending date of the period during which the test runs executed, in YYY-MM-DDTHH:MM:SSZ
                             or Unix time format.
@@ -61,3 +61,76 @@ class Insights(Base):
         params = get_dict_from_locals(locals())
 
         return self._session.request('get', f'{self.__sub_host}/insights/test-metrics', params=params)
+
+    def get_test_trends(self, start: datetime, end: datetime, interval: str, scope=None, owner=None, status=None,
+                        os=None, browser=None):
+        """
+        https://docs.saucelabs.com/dev/api/insights/#get-test-trends
+
+        Returns a set of data "buckets" representing tests that were run in each time interval defined
+        by the request parameters
+        :param start: The starting date of the period during which the test runs executed, in YYY-MM-DDTHH:MM:SSZ
+                            or Unix time format.
+        :param end: The ending date of the period during which the test runs executed, in YYY-MM-DDTHH:MM:SSZ
+                            or Unix time format.
+        :param interval: The amount of time representing the boundary of each data bucket
+        :param scope: Specifies the scope of the owner parameter
+        :param owner: The name of one or more users in the requestor's organization who executed the requested tests.
+                            This parameter is required if the scope parameter is set to single.
+        :param status: Limit results to only those with a specified status
+        :param os: Limit results to only those run on the specified operating systems
+        :param browser: Limit results to only those run on the specified browsers
+        :return:
+        """
+        start, end = get_datetime_for_insights(start, end)
+        params = get_dict_from_locals(locals())
+
+        return self._session.request('get', f'{self.__sub_host}/trends/tests', params=params)
+
+    def get_builds_and_tests(self, start: datetime, end: datetime, scope=None, owner=None, status=None, os=None,
+                             browser=None):
+        """
+        https://docs.saucelabs.com/dev/api/insights/#get-builds-and-tests
+
+        Returns the set of all tests run within the specified time period, grouped by whether
+        each test was part of a build or not
+        :param start: The starting date of the period during which the test runs executed, in YYY-MM-DDTHH:MM:SSZ
+                            or Unix time format.
+        :param end: The ending date of the period during which the test runs executed, in YYY-MM-DDTHH:MM:SSZ
+                            or Unix time format.
+        :param scope: Specifies the scope of the owner parameter
+        :param owner: The name of one or more users in the requestor's organization who executed the requested tests.
+                            This parameter is required if the scope parameter is set to single.
+        :param status: Limit results to only those with a specified status
+        :param os: Limit results to only those run on the specified operating systems
+        :param browser: Limit results to only those run on the specified browsers
+        :return:
+        """
+        start, end = get_datetime_for_insights(start, end)
+        params = get_dict_from_locals(locals())
+
+        return self._session.request('get', f'{self.__sub_host}/trends/builds_tests', params=params)
+
+    def get_error_trends(self, start: datetime, end: datetime, scope=None, owner=None, status=None, os=None,
+                         browser=None):
+        """
+        https://docs.saucelabs.com/dev/api/insights/#get-error-trends
+
+
+        Returns an array of errors that occurred on all tests run within the specified time period.
+        :param start: The starting date of the period during which the test runs executed, in YYY-MM-DDTHH:MM:SSZ
+                            or Unix time format.
+        :param end: The ending date of the period during which the test runs executed, in YYY-MM-DDTHH:MM:SSZ
+                            or Unix time format.
+        :param scope: Specifies the scope of the owner parameter
+        :param owner: The name of one or more users in the requestor's organization who executed the requested tests.
+                            This parameter is required if the scope parameter is set to single.
+        :param status: Limit results to only those with a specified status
+        :param os: Limit results to only those run on the specified operating systems
+        :param browser: Limit results to only those run on the specified browsers
+        :return:
+        """
+        start, end = get_datetime_for_insights(start, end)
+        params = get_dict_from_locals(locals())
+
+        return self._session.request('get', f'{self.__sub_host}/trends/errors', params=params)
