@@ -3,7 +3,6 @@ import json
 import os
 
 import requests
-
 from saucelab_api_client.base_classes.exceptions import CredentialsError
 from saucelab_api_client.models.service import Auth
 
@@ -50,7 +49,7 @@ class Session:
             return
         else:
 
-            path, config = __file__, configparser.ConfigParser()
+            path, config = os.path.dirname(__file__), configparser.ConfigParser()
             for _ in range(7):
                 for file in ('pytest', 'saucelab'):
                     file_name = os.path.join(path, f'{file}.ini')
@@ -75,7 +74,3 @@ class Session:
                 return
 
         raise CredentialsError('Missing credentials')
-
-    def __del__(self):
-        if os.path.isfile(self._device_cache):
-            os.remove(self._device_cache)

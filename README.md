@@ -59,7 +59,7 @@ from saucelab_api_client.saucelab_api_client import SauceLab
 saucelab = SauceLab()
 ```
 
-**Features in version: 0.4**
+**Features in version: 0.4.1**
 
 - Supported api:
     - accounts
@@ -70,6 +70,7 @@ saucelab = SauceLab()
     - storage
     - sauce connect
 - Powerful device filter - saucelab.devices.filter_devices()
+- Added list support for parameters in devices filter
 - Added base64 credentials encoding
 
 **TODO**

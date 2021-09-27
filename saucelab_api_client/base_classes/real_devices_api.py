@@ -107,6 +107,8 @@ class RealDevices(Base):
                 if device.device_id not in available_devices:
                     return False
             if all(tuple(str(device.__getattribute__(key)).lower() == str(value).lower()
+                         if not isinstance(value, (list, tuple)) else
+                         str(device.__getattribute__(key)).lower() in (param.lower() for param in value)
                          for key, value in main_property.items() if value is not None)):
                 check_min = all(tuple(device.__getattribute__(key) >= value if key != 'os_version' else
                                       compare_version(device.__getattribute__(key), value) != 'less' for
@@ -129,11 +131,10 @@ class RealDevices(Base):
             if cache_device is not None:
                 create_time = cache_device.get('create_time')
                 if create_time is not None:
-                    print((datetime.now() - datetime.fromtimestamp(create_time)).seconds)
-                    if (datetime.now() - datetime.fromtimestamp(create_time)).seconds > 3:
+                    if (datetime.now() - datetime.fromtimestamp(create_time)).seconds > 10:
                         need_update = True
                     else:
-                        return [Device(json.loads(from_cache)) for from_cache in cache_device['devices']]
+                        return [Device(json.loads(from_cache), True) for from_cache in cache_device['devices']]
             if cache_device is None or need_update:
                 devices, json_devices = [], []
                 for _ in range(get_random_devices):
