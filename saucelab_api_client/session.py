@@ -76,3 +76,5 @@ class Session:
                 if env_policy == 'clear':
                     tuple(map(os.environ.pop, ('SAUCELAB_USERNAME', 'SAUCELAB_TOKEN', 'SAUCELAB_HOST')))
                 return
+        self.__host = ''
+        self._session.auth = Auth('', '')
