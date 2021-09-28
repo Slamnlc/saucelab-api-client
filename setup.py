@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='saucelab-api-client',
-    version='0.5',
+    version='0.5.1',
     use_scm_version=False,
     description='SauceLab Api Python Client',
     long_description=long_description,
@@ -14,7 +14,7 @@ setup(
     author='Biriukov Maksym',
     author_email='maximbirukov77@gmail.com',
     url="https://github.com/Slamnlc/saucelab-api-client",
-    download_url='https://github.com/Slamnlc/saucelab-api-client/archive/refs/tags/v0.5.tar.gz',
+    download_url='https://github.com/Slamnlc/saucelab-api-client/archive/refs/tags/v0.5.1.tar.gz',
     packages=setuptools.find_packages(exclude=("tests", "dev_tools")),
     install_requires=[
         'requests'

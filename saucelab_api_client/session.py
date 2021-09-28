@@ -1,4 +1,3 @@
-import base64
 import configparser
 import json
 import os
@@ -6,7 +5,7 @@ import os
 import requests
 
 from saucelab_api_client.base_classes.exceptions import CredentialsError
-from saucelab_api_client.models.service import Auth
+from saucelab_api_client.models.service import Auth, Host
 
 
 class Session:
@@ -26,6 +25,7 @@ class Session:
         del host, username, token
         if self.__host[-1] == '/':
             self.__host = self.__host[:-1]
+        self.driver = Host(self._session, self.__host)
 
     def request(self, method: str, url: str, data: dict = None, params: dict = None,
                 return_type: str = False, **kwargs):
@@ -77,8 +77,3 @@ class Session:
                 return
 
         raise CredentialsError('Missing credentials')
-
-    @property
-    def driver(self):
-        return f'https://{base64.b64decode(self._session.auth.data).decode("utf-8")}@ondemand.' \
-               f'{self.__host.split(".", maxsplit=1)[1].replace("/", "")}:443/wd/hub'

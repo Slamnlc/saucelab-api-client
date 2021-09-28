@@ -52,11 +52,16 @@ class Auth:
 
 
 class Host:
-    def __init__(self, auth: Auth, host: str):
-        self.__host = f'https://{auth.data}@ondemand.{host.split(".", maxsplit=1)[1].replace("/", "")}:443/wd/hub'
+    def __init__(self, session, host):
+        self.data = session.auth.data
+        self.host = host.split('.', maxsplit=1)[1].replace('/', '')
+        self.template = 'https://{}@ondemand.{}:443/wd/hub'
+
+    def __str__(self):
+        return self.template
 
     def __call__(self):
-        return base64.b64decode(self.__host)
+        return self.template.format(base64.b64decode(self.data).decode('utf-8'), self.host)
 
 
 def print_progress(event: Event, progress_type: str):
