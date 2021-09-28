@@ -51,6 +51,14 @@ class Auth:
         return 'BasicAuth'
 
 
+class Host:
+    def __init__(self, auth: Auth, host: str):
+        self.__host = f'https://{auth.data}@ondemand.{host.split(".", maxsplit=1)[1].replace("/", "")}:443/wd/hub'
+
+    def __call__(self):
+        return base64.b64decode(self.__host)
+
+
 def print_progress(event: Event, progress_type: str):
     start, work, end = {
         'download': ('Start download file', 'Download time', 'Download finished'),
@@ -125,8 +133,8 @@ def replace_html_tags(string_to_clear: str) -> str:
 
 
 def get_dict_from_locals(locals_dict: dict, replace_underscore: bool = False) -> dict:
-    return {key.replace('_', '-') if replace_underscore else key: value for key, value in locals_dict.items()
-            if key != 'self' and '__py' not in key and value is not None}
+    return {key.replace('from_', 'from').replace('_', '-') if replace_underscore else key: value for key, value in
+            locals_dict.items() if key not in ('self', 'real_device') and '__py' not in key and value is not None}
 
 
 def get_datetime_for_insights(start, end) -> (datetime, datetime):

@@ -17,18 +17,19 @@ pip install saucelab-api-client
 **Configuration**
 Starting from version 0.3 you can configure saucelab client credentials with 3 way:
 
-1. Directly set credentials in class constructor
+Way 1. Directly set credentials in class constructor
 
 ```shell
 from saucelab_api_client.saucelab_api_client import SauceLab
 saucelab = SauceLab('your_host', 'your_username', 'your_token')
 ```
 
-2. Set credentials in pytest.ini or in saucelab.ini This files must be in root folder project path Add group [saucelab]
-   Add variables:
-    - **saucelab_username**
-    - **saucelab_token**
-    - **saucelab_host**
+Way 2. Set credentials in pytest.ini or in saucelab.ini This files must be in root folder project path Add
+group [saucelab]
+Add variables:
+- **saucelab_username**
+- **saucelab_token**
+- **saucelab_host**
 
 Example **pytest.ini** or **saucelab.ini**
 
@@ -46,7 +47,7 @@ from saucelab_api_client.saucelab_api_client import SauceLab
 saucelab = SauceLab()
 ```
 
-3. You can set environment variables:
+Way 3. You can set environment variables:
 
 - SAUCELAB_USERNAME
 - SAUCELAB_TOKEN
@@ -59,7 +60,7 @@ from saucelab_api_client.saucelab_api_client import SauceLab
 saucelab = SauceLab()
 ```
 
-**Features in version: 0.4.1**
+**Features in version: 0.5**
 
 - Supported api:
     - accounts
@@ -71,6 +72,7 @@ saucelab = SauceLab()
     - sauce connect
 - Powerful device filter - saucelab.devices.filter_devices()
 - Added list support for parameters in devices filter
+- Added driver generation
 - Added base64 credentials encoding
 
 **TODO**

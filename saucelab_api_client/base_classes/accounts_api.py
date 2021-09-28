@@ -1,5 +1,3 @@
-from typing import Union
-
 from saucelab_api_client.base_classes.exceptions import MissingArguments
 from saucelab_api_client.category import Base
 from saucelab_api_client.models.accounts import TeamSearch, Team, UserSearch, User
@@ -274,3 +272,6 @@ class AccountUser(Base):
         :return:
         """
         return self._session.request('get', f'{self.__sub_host}/users/{user_id}/teams')['results']
+
+    def get_active_user(self):
+        return self._valid(self._session.request('get', f'{self.__sub_host}/users/me'), User)

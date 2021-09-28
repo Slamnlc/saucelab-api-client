@@ -1,5 +1,6 @@
 from saucelab_api_client.base_classes.accounts_api import Accounts
 from saucelab_api_client.base_classes.insights_api import Insights
+from saucelab_api_client.base_classes.insights_real_devices_api import InsightsRealDeviceApi
 from saucelab_api_client.base_classes.job_api import JobsApi
 from saucelab_api_client.base_classes.performance_api import PerformanceApi
 from saucelab_api_client.base_classes.platform_api import Platform
@@ -42,3 +43,7 @@ class SauceLab(Session):
     @property
     def sauce_connect(self):
         return SauceConnectApi(self)
+
+    @property
+    def real_devices_insights(self):
+        return InsightsRealDeviceApi(self)
