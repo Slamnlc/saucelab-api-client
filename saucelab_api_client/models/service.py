@@ -54,7 +54,7 @@ class Auth:
 class Host:
     def __init__(self, session, host):
         self.data = session.auth.data
-        self.host = host.split('.', maxsplit=1)[1].replace('/', '')
+        self.host = '' if host == '' else host.split('.', maxsplit=1)[1].replace('/', '')
         self.template = 'https://{}@ondemand.{}:443/wd/hub'
 
     def __str__(self):
