@@ -4,7 +4,6 @@ import os
 
 import requests
 
-from saucelab_api_client.base_classes.exceptions import CredentialsError
 from saucelab_api_client.models.service import Auth, Host
 
 
@@ -77,5 +76,3 @@ class Session:
                 if env_policy == 'clear':
                     tuple(map(os.environ.pop, ('SAUCELAB_USERNAME', 'SAUCELAB_TOKEN', 'SAUCELAB_HOST')))
                 return
-
-        raise CredentialsError('Missing credentials')
