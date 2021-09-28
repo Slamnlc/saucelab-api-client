@@ -9,7 +9,7 @@ from saucelab_api_client.models.service import Auth, Host
 
 
 class Session:
-    def __init__(self, host: str = None, username: str = None, token: str = None):
+    def __init__(self, host: str = None, username: str = None, token: str = None, env_policy: str = 'clear'):
         """
         https://docs.saucelabs.com/dev/api/
 
@@ -17,11 +17,12 @@ class Session:
         :param host:
         :param username: your username
         :param token: tour API token
+        :param env_policy: str
         """
         self.__host: str
         self._device_cache = os.path.join(os.path.dirname(__file__), 'devices.json')
         self._session = requests.Session()
-        self.__get_auth(host, username, token)
+        self.__get_auth(host, username, token, env_policy)
         del host, username, token
         if self.__host[-1] == '/':
             self.__host = self.__host[:-1]
@@ -45,7 +46,7 @@ class Session:
         else:
             return f'Error: {response.status_code}: {response.reason} ({response.text})'
 
-    def __get_auth(self, host: str = None, username: str = None, token: str = None):
+    def __get_auth(self, host: str = None, username: str = None, token: str = None, env_policy: str = None):
 
         if all((host, username, token)):
             self._session.auth, self.__host = Auth(username, token), host
@@ -73,7 +74,8 @@ class Session:
             if all((env_username, env_token, env_host)):
                 self._session.auth = Auth(env_username, env_token)
                 self.__host = env_host
-                tuple(map(os.environ.pop, ('SAUCELAB_USERNAME', 'SAUCELAB_TOKEN', 'SAUCELAB_HOST')))
+                if env_policy == 'clear':
+                    tuple(map(os.environ.pop, ('SAUCELAB_USERNAME', 'SAUCELAB_TOKEN', 'SAUCELAB_HOST')))
                 return
 
         raise CredentialsError('Missing credentials')
