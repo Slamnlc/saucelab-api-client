@@ -129,7 +129,7 @@ class Storage(Base):
         data = {'item': {'description': new_description}}
         return self._valid(self._session.request('put', f'{self.__sub_host}/files/{file_id}', data=data), File, 'item')
 
-    def delete_by_file_id(self, file_id: str) -> File:
+    def delete_by_file_id(self, file_id: str):
         """
         https://docs.saucelabs.com/dev/api/storage/#delete-an-app-storage-file
 
@@ -139,7 +139,7 @@ class Storage(Base):
         """
         return self._valid(self._session.request('delete', f'{self.__sub_host}/files/{file_id}'), File, 'item')
 
-    def delete_all_files_by_bundle_id(self, bundle_id: str) -> list[File]:
+    def delete_all_files_by_bundle_id(self, bundle_id: str):
         """
 
         :param bundle_id:
@@ -148,7 +148,7 @@ class Storage(Base):
         return tuple(self.delete_by_file_id(app_id) for app_id in (app.file_id for app in self.files()
                                                                    if app.metadata.identifier == bundle_id))
 
-    def delete_by_group_id(self, group_id: str) -> None:
+    def delete_by_group_id(self, group_id: str):
         """
         https://docs.saucelabs.com/dev/api/storage/#delete-a-group-of-app-storage-files
 

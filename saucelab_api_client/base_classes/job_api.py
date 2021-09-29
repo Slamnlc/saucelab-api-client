@@ -148,7 +148,7 @@ class JobsApi(Base):
 
         return self._session.request('delete', f'/{username}/jobs/{job_id}/assets')
 
-    def get_builds(self, username: str) -> list[Build]:
+    def get_builds(self, username: str):
         """
         https://docs.saucelabs.com/dev/api/jobs/#get-builds
 

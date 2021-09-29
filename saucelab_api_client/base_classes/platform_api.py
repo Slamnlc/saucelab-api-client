@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Union
 
 from saucelab_api_client.category import Base
 from saucelab_api_client.models.platform_ import Status, WebDriverPlatform, AppiumPlatform
@@ -8,7 +7,7 @@ from saucelab_api_client.models.platform_ import Status, WebDriverPlatform, Appi
 class Platform(Base):
     __sub_host = '/rest/v1/info'
 
-    def get_status(self) -> Status:
+    def get_status(self):
         """
         https://docs.saucelabs.com/dev/api/platform/#get-sauce-labs-teststatus
 
@@ -17,7 +16,7 @@ class Platform(Base):
         """
         return self._valid(self._session.request('get', f'{self.__sub_host}/status'), Status)
 
-    def get_supported_platforms(self, automation_api: str) -> Union[str, tuple]:
+    def get_supported_platforms(self, automation_api: str):
         """
         https://docs.saucelabs.com/dev/api/platform/#get-supported-platforms
 
@@ -35,7 +34,7 @@ class Platform(Base):
             return tuple(WebDriverPlatform(automation) if automation['automation_backend'] == 'webdriver'
                          else AppiumPlatform(automation) for automation in response)
 
-    def get_end_of_life_date_appium_versions(self) -> Union[str, dict]:
+    def get_end_of_life_date_appium_versions(self):
         """
         https://docs.saucelabs.com/dev/api/platform/#get-end-of-life-dates-for-appium-versions
 
