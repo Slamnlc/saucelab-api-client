@@ -9,7 +9,7 @@ class Insights(Base):
     __sub_host = '/v1/analytics'
 
     def test_results(self, start: datetime, end: datetime, scope=None, owner=None, status=None, build=None, from_=None,
-                     max_results=None, missing_build=None, query=None, desc=None, error=None) -> list[Insight]:
+                     max_results=None, missing_build=None, query=None, desc=None, error=None):
         """
         https://docs.saucelabs.com/dev/api/insights/#get-test-results
 

@@ -6,7 +6,7 @@ from threading import Event
 from time import sleep
 
 
-def compare_version(version: str, new_version: str) -> str:
+def compare_version(version: str, new_version: str):
     version_split = version.split('.')
     new_version_split = new_version.split('.')
     for index, sub_version in enumerate(version_split):
@@ -21,7 +21,7 @@ def compare_version(version: str, new_version: str) -> str:
     return 'draw'
 
 
-def validate_dict(dict_to_check: dict, example: (tuple, list), soft_check: bool = False) -> bool:
+def validate_dict(dict_to_check: dict, example: (tuple, list), soft_check: bool = False):
     error_message = []
     for key in dict_to_check:
         if key not in example:
@@ -102,7 +102,7 @@ def print_progress(event: Event, progress_type: str):
             break
 
 
-def replace_html_tags(string_to_clear: str) -> str:
+def replace_html_tags(string_to_clear: str):
     html_tags = ['<!--...-->', '<!doctype>', '<a>', '<abbr>', '<acronym>', '<address>', '<applet>', '<area>',
                  '<article>', '<aside>', '<audio>', '<b>', '<base>', '<basefont>', '<bb>', '<bdo>', '<big>',
                  '<blockquote>', '<body>', '<br/>', '<button>', '<canvas>', '<caption>', '<center>', '<cite>',
@@ -137,14 +137,19 @@ def replace_html_tags(string_to_clear: str) -> str:
     return string_to_clear
 
 
-def get_dict_from_locals(locals_dict: dict, replace_underscore: bool = False) -> dict:
+def get_dict_from_locals(locals_dict: dict, replace_underscore: bool = False):
     return {key.replace('from_', 'from').replace('_', '-') if replace_underscore else key: value for key, value in
             locals_dict.items() if key not in ('self', 'real_device') and '__py' not in key and value is not None}
 
 
-def get_datetime_for_insights(start, end) -> (datetime, datetime):
+def get_datetime_for_insights(start, end):
     if not isinstance(start, datetime):
         raise ValueError('Start time must be datetime')
     if not isinstance(start, datetime):
         raise ValueError('End time must be datetime')
     return start.strftime('%Y-%m-%dT%H:%M:%SZ'), end.strftime('%Y-%m-%dT%H:%M:%SZ')
+
+
+
+def parse_csv(csv_text: bytes):
+    pass

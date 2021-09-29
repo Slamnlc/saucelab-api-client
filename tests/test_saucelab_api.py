@@ -13,7 +13,7 @@ from saucelab_api_client.saucelab_api_client import SauceLab
 
 class MainSauceLab(unittest.TestCase):
     @classmethod
-    def setUpClass(cls) -> None:
+    def setUpClass(cls):
         cls.sauce_lab = SauceLab()
 
 
@@ -25,7 +25,7 @@ class CreateSauceLab(MainSauceLab):
 class DeviceTests(MainSauceLab):
 
     @classmethod
-    def setUpClass(cls) -> None:
+    def setUpClass(cls):
         super(DeviceTests, cls).setUpClass()
         cls.devices = cls.sauce_lab.devices.devices_list()
         cls.random_device = random.choice(cls.devices)
@@ -67,7 +67,7 @@ class DeviceTests(MainSauceLab):
 
 class StorageTests(MainSauceLab):
     @classmethod
-    def setUpClass(cls) -> None:
+    def setUpClass(cls):
         super(StorageTests, cls).setUpClass()
         cls.files = cls.sauce_lab.storage.files()
         cls.random_file = random.choice(cls.files)
@@ -101,7 +101,7 @@ class StorageTests(MainSauceLab):
 
 class PlatformTests(MainSauceLab):
     @classmethod
-    def setUpClass(cls) -> None:
+    def setUpClass(cls):
         super(PlatformTests, cls).setUpClass()
 
     def test_status(self):
@@ -119,7 +119,7 @@ class PlatformTests(MainSauceLab):
 
 class TeamTests(MainSauceLab):
     @classmethod
-    def setUpClass(cls) -> None:
+    def setUpClass(cls):
         super(TeamTests, cls).setUpClass()
         cls.teams = cls.sauce_lab.accounts.account_team.teams()
         cls.random_team = random.choice(cls.teams)
@@ -135,7 +135,7 @@ class TeamTests(MainSauceLab):
 
 class UserTests(MainSauceLab):
     @classmethod
-    def setUpClass(cls) -> None:
+    def setUpClass(cls):
         super(UserTests, cls).setUpClass()
         cls.users = cls.sauce_lab.accounts.account_user.all_users()
         cls.random_user = random.choice(cls.users)

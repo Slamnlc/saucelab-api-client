@@ -1,6 +1,5 @@
 import os
 from threading import Event, Thread
-from typing import Union
 
 from saucelab_api_client.base_classes.exceptions import WrongFileExtension
 from saucelab_api_client.category import Base
@@ -12,7 +11,7 @@ from saucelab_api_client.models.service import print_progress, get_dict_from_loc
 class Storage(Base):
     __sub_host = '/v1/storage'
 
-    def files(self, q=None, kind=None, file_id=None, team_id=None, page=None, per_page=None) -> list[File]:
+    def files(self, q=None, kind=None, file_id=None, team_id=None, page=None, per_page=None):
         """
         https://docs.saucelabs.com/dev/api/storage/#get-app-storage-files
 
@@ -28,7 +27,7 @@ class Storage(Base):
         params = get_dict_from_locals(locals())
         return self._valid(self._session.request('get', f'{self.__sub_host}/files', params=params), File, 'items')
 
-    def file_by_id(self, file_id: str) -> File:
+    def file_by_id(self, file_id: str):
         """
         Get file by file_id
         :param file_id: One or more specific IDs of the files to return
@@ -36,7 +35,7 @@ class Storage(Base):
         """
         return self.files(file_id=file_id)[0]
 
-    def file_by_bundle_id(self, bundle_id: str, get_last: bool = True) -> Union[File, list[File]]:
+    def file_by_bundle_id(self, bundle_id: str, get_last: bool = True):
         """
         Get File objects
         :param bundle_id:
@@ -49,7 +48,7 @@ class Storage(Base):
         else:
             return result
 
-    def groups(self, q=None, kind=None, group_id=None, page=None, per_page=None) -> Group:
+    def groups(self, q=None, kind=None, group_id=None, page=None, per_page=None):
         """
         https://docs.saucelabs.com/dev/api/storage/#get-app-storage-groups
 
@@ -65,7 +64,7 @@ class Storage(Base):
         params = get_dict_from_locals(locals())
         return self._valid(self._session.request('get', f'{self.__sub_host}/groups', params=params), Group, 'items')
 
-    def upload(self, app_path: str) -> File:
+    def upload(self, app_path: str):
         """
         https://docs.saucelabs.com/dev/api/storage/#upload-file-to-app-storage
 
@@ -117,7 +116,7 @@ class Storage(Base):
             exit_event.set()
             open(path, 'wb').write(response)
 
-    def edit_description(self, file_id: str, new_description: str) -> File:
+    def edit_description(self, file_id: str, new_description: str):
         """
         https://docs.saucelabs.com/dev/api/storage/#edit-a-stored-files-description
 

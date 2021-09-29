@@ -1,6 +1,5 @@
 import os
 from threading import Thread, Event
-from typing import Union
 
 from saucelab_api_client.category import Base
 from saucelab_api_client.models.build import Build
@@ -12,7 +11,7 @@ class JobsApi(Base):
     __sub_host = '/rest/v1'
 
     def get_user_jobs(self, username: str, limit: int = None, skip: int = None, from_: str = None, to: str = None) \
-            -> list[JobSearch]:
+            :
         """
         https://docs.saucelabs.com/dev/api/jobs/#jobs-methods
 
@@ -27,7 +26,7 @@ class JobsApi(Base):
         params = {key.replace('_', ''): value for key, value in locals().items() if value}
         return self._valid(self._session.request('get', f'{self.__sub_host}/{username}/jobs', params=params), JobSearch)
 
-    def get_job_details(self, username: str, job_id: str) -> Job:
+    def get_job_details(self, username: str, job_id: str):
         """
         https://docs.saucelabs.com/dev/api/jobs/#get-job-details
 
@@ -39,7 +38,7 @@ class JobsApi(Base):
         return self._valid(self._session.request('get', f'{self.__sub_host}/{username}/jobs/{job_id}'), Job)
 
     def update_job(self, username: str, job_id: str, name: str = None, tags: [tuple, list] = None, public: str = None,
-                   passed: str = None, build: str = None, custom_data: dict = None) -> Job:
+                   passed: str = None, build: str = None, custom_data: dict = None):
         """
         https://docs.saucelabs.com/dev/api/jobs/#update-a-job
 
@@ -57,7 +56,7 @@ class JobsApi(Base):
         data = get_dict_from_locals(locals(), replace_underscore=True)
         return self._valid(self._session.request('put', f'{self.__sub_host}/{username}/jobs/{job_id}', data=data), Job)
 
-    def stop_job(self, username: str, job_id: str) -> Job:
+    def stop_job(self, username: str, job_id: str):
         """
         https://docs.saucelabs.com/dev/api/jobs/#stop-a-job
 
@@ -68,7 +67,7 @@ class JobsApi(Base):
         """
         return self._valid(self._session.request('put', f'{self.__sub_host}/{username}/jobs/{job_id}/stop'), Job)
 
-    def delete_job(self, job_id: str) -> None:
+    def delete_job(self, job_id: str):
         """
         https://docs.saucelabs.com/dev/api/jobs/#delete-a-job
 
@@ -78,7 +77,7 @@ class JobsApi(Base):
         """
         self._session.request('delete', f'/rest/v1.1/jobs/{job_id}')
 
-    def delete_all_users_jobs(self, username: str) -> None:
+    def delete_all_users_jobs(self, username: str):
         """
         https://docs.saucelabs.com/dev/api/jobs/#delete-all-of-a-users-jobs
 
@@ -88,7 +87,7 @@ class JobsApi(Base):
         """
         self._session.request('get', f'/rest/v1.1/{username}/jobs')
 
-    def get_job_assets(self, username: str, job_id: str) -> JobAssets:
+    def get_job_assets(self, username: str, job_id: str):
         """
         https://docs.saucelabs.com/dev/api/jobs/#list-job-assets
 
@@ -101,7 +100,7 @@ class JobsApi(Base):
                            JobAssets)
 
     def get_job_asset_file(self, username: str, job_id: str, file_name: str, media_path: str = None,
-                           media_file_name: str = None) -> Union[dict, str, None]:
+                           media_file_name: str = None):
         """
         https://docs.saucelabs.com/dev/api/jobs/#get-a-job-asset-file
 
@@ -136,7 +135,7 @@ class JobsApi(Base):
         else:
             raise FileNotFoundError('Wrong file name')
 
-    def delete_all_job_assets(self, username: str, job_id: str) -> dict:
+    def delete_all_job_assets(self, username: str, job_id: str):
         """
         https://docs.saucelabs.com/dev/api/jobs/#delete-job-assets
 

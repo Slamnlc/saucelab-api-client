@@ -18,7 +18,7 @@ class Accounts(Base):
 class AccountTeam(Base):
     __sub_host = '/team-management/v1'
 
-    def teams(self, team_name: str = None) -> TeamSearch:
+    def teams(self, team_name: str = None):
         """
         https://docs.saucelabs.com/dev/api/accounts/#lookup-teams
 
@@ -33,7 +33,7 @@ class AccountTeam(Base):
         return self._valid(self._session.request('get', f'{self.__sub_host}/teams/', params=params), TeamSearch,
                            'results')
 
-    def get_team(self, team_id: str) -> Team:
+    def get_team(self, team_id: str):
         """
         https://docs.saucelabs.com/dev/api/accounts/#get-a-specific-team
 
@@ -43,7 +43,7 @@ class AccountTeam(Base):
         """
         return self._valid(self._session.request('get', f'{self.__sub_host}/teams/{team_id}'), Team)
 
-    def create_team(self, name: str, organization: str, settings: dict, description: str = None) -> Team:
+    def create_team(self, name: str, organization: str, settings: dict, description: str = None):
         """
         https://docs.saucelabs.com/dev/api/accounts/#create-a-team
 
@@ -68,7 +68,7 @@ class AccountTeam(Base):
             data['description'] = description
         return self._valid(self._session.request('post', f'{self.__sub_host}/teams', data=data), Team)
 
-    def delete_team(self, team_id: str) -> None:
+    def delete_team(self, team_id: str):
         """
         https://docs.saucelabs.com/dev/api/accounts/#delete-a-team
 
@@ -78,7 +78,7 @@ class AccountTeam(Base):
         """
         self._session.request('delete', f'{self.__sub_host}/teams/{team_id}')
 
-    def update_team(self, team_id: str, name: str, settings: dict, description: str = None) -> Team:
+    def update_team(self, team_id: str, name: str, settings: dict, description: str = None):
         """
         https://docs.saucelabs.com/dev/api/accounts/#update-a-team
 
@@ -106,7 +106,7 @@ class AccountTeam(Base):
         return self._valid(self._session.request('put', f'{self.__sub_host}/teams/{team_id}', data=data), Team)
 
     def partially_update_team(self, team_id: str = None, name: str = None, settings: dict = None,
-                              description: str = None) -> Team:
+                              description: str = None):
         """
         https://docs.saucelabs.com/dev/api/accounts/#partially-update-a-team
 
@@ -129,7 +129,7 @@ class AccountTeam(Base):
             raise MissingArguments('Missing any arguments')
         return self._valid(self._session.request('patch', f'{self.__sub_host}/teams/{team_id}/', data=data), Team)
 
-    def list_team_members(self, team_id: str) -> UserSearch:
+    def list_team_members(self, team_id: str):
         """
         https://docs.saucelabs.com/dev/api/accounts/#list-team-members
 
@@ -140,7 +140,7 @@ class AccountTeam(Base):
         return self._valid(self._session.request('get', f'{self.__sub_host}/teams/{team_id}/members'), UserSearch,
                            'results')
 
-    def reset_access_key_for_team(self, team_id: str) -> None:
+    def reset_access_key_for_team(self, team_id: str):
         """
         https://docs.saucelabs.com/dev/api/accounts/#reset-access-keys-for-entire-team
 
@@ -157,7 +157,7 @@ class AccountUser(Base):
     __sub_host = '/team-management/v1'
 
     def all_users(self, username: str = None, teams: str = None, team_name: str = None, roles: int = None,
-                  phrase: str = None, status: str = None, limit: int = None, offset: int = None) -> list[UserSearch]:
+                  phrase: str = None, status: str = None, limit: int = None, offset: int = None):
         """
         https://docs.saucelabs.com/dev/api/accounts/#lookup-users
 
@@ -185,7 +185,7 @@ class AccountUser(Base):
         return self._valid(self._session.request('get', f'{self.__sub_host}/users/', params=params), UserSearch,
                            'results')
 
-    def get_user(self, user_id: str) -> User:
+    def get_user(self, user_id: str):
         """
         https://docs.saucelabs.com/dev/api/accounts/#get-a-specific-user
 
@@ -196,7 +196,7 @@ class AccountUser(Base):
         return self._valid(self._session.request('get', f'{self.__sub_host}/users/{user_id}'), User)
 
     def create(self, email: str, username: str, password: str, first_name: str = None, last_name: str = None,
-               organization: str = None, role: str = None, team: str = None) -> User:
+               organization: str = None, role: str = None, team: str = None):
         """
         https://docs.saucelabs.com/dev/api/accounts/#create-a-new-user
 
@@ -215,7 +215,7 @@ class AccountUser(Base):
         data = get_dict_from_locals(locals())
         return self._valid(self._session.request('post', f'{self.__sub_host}/users/', data=data), User)
 
-    def update_user(self, user_id: str, first_name: str, last_name: str, email: str, password: str) -> User:
+    def update_user(self, user_id: str, first_name: str, last_name: str, email: str, password: str):
         """
         https://docs.saucelabs.com/dev/api/accounts/#update-a-user
 
@@ -233,7 +233,7 @@ class AccountUser(Base):
         return self._valid(self._session.request('put', f'{self.__sub_host}/users/{user_id}', data=data), User)
 
     def partially_update_user(self, user_id: str, first_name: str = None, last_name: str = None, email: str = None,
-                              password: str = None) -> User:
+                              password: str = None):
         """
         https://docs.saucelabs.com/dev/api/accounts/#partially-update-a-user
 
@@ -252,7 +252,7 @@ class AccountUser(Base):
             raise MissingArguments('Missing any arguments')
         return self._valid(self._session.request('patch', f'{self.__sub_host}/users/{user_id}', data=data), User)
 
-    def get_user_concurrency(self, username: str) -> dict:
+    def get_user_concurrency(self, username: str):
         """
         https://docs.saucelabs.com/dev/api/accounts/#get-user-concurrency
 

@@ -16,7 +16,7 @@ class RealDevices(Base):
         super().__init__(session)
         self.__cache = session._device_cache
 
-    def devices_list(self) -> list[Device]:
+    def devices_list(self):
         """
         https://docs.saucelabs.com/dev/api/rdc/#get-devices
 
@@ -26,7 +26,7 @@ class RealDevices(Base):
         """
         return [Device(device) for device in self._session.request('get', f'{self.__sub_host}/devices')]
 
-    def get_device_by_id(self, device_id: str) -> Device:
+    def get_device_by_id(self, device_id: str):
         """
         https://docs.saucelabs.com/dev/api/rdc/#get-a-specific-device
 
@@ -36,7 +36,7 @@ class RealDevices(Base):
         """
         return self._valid(self._session.request('get', f'{self.__sub_host}/devices/{device_id}'), Device)
 
-    def available_devices(self) -> list[str]:
+    def available_devices(self):
         """
         https://docs.saucelabs.com/dev/api/rdc/#get-a-specific-device
 
@@ -44,7 +44,7 @@ class RealDevices(Base):
         """
         return self._session.request('get', f'{self.__sub_host}/devices/available')
 
-    def jobs(self, offset: int = None, limit: int = None) -> RealDeviceJob:
+    def jobs(self, offset: int = None, limit: int = None):
         """
         https://docs.saucelabs.com/dev/api/rdc/#get-real-device-jobs
 
@@ -57,7 +57,7 @@ class RealDevices(Base):
         return self._valid(self._session.request('get', f'{self.__sub_host}/jobs', params=params), RealDeviceJob,
                            key='entities')
 
-    def job_by_id(self, job_id: str) -> RealDeviceJob:
+    def job_by_id(self, job_id: str):
         """
         https://docs.saucelabs.com/dev/api/rdc/#get-a-specific-real-device-job
 
