@@ -67,7 +67,8 @@ class Host:
 def print_progress(event: Event, progress_type: str):
     start, work, end = {
         'download': ('Start download file', 'Download time', 'Download finished'),
-        'upload': ('Start upload file', 'Upload time', 'Upload finished')
+        'upload': ('Start upload file', 'Upload time', 'Upload finished'),
+        'build': ('Start building file', 'Building time', 'Build finished')
     }[progress_type]
     main_icon, meet = '🐱', ('🙈', '🙉', '🙊')
     enemy = ['🐲', '🐶', '🐭', '🐝', '🦄', '🐕', '🐳', '🦑', '🦂', '🐺', '🐼', '🐸']
@@ -87,7 +88,7 @@ def print_progress(event: Event, progress_type: str):
                 else:
                     row[position - 1] = value
                     row[position] = '.'
-        if random.randint(0, 7) == 5:
+        if random.randint(0, 6) == 3:
             row[-1] = random.choice(enemy)
         main_row = ''.join(row)
         txt = f'\r{work} {str(datetime.now() - start_time).split(".", maxsplit=1)[0]}...{symbols[index]}'
@@ -148,7 +149,6 @@ def get_datetime_for_insights(start, end):
     if not isinstance(start, datetime):
         raise ValueError('End time must be datetime')
     return start.strftime('%Y-%m-%dT%H:%M:%SZ'), end.strftime('%Y-%m-%dT%H:%M:%SZ')
-
 
 
 def parse_csv(csv_text: bytes):

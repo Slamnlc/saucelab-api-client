@@ -91,7 +91,7 @@ class RealDevices(Base):
                 raise ValueError('get_random_devices must be integer value')
         local_variables = locals()
         main_dict = {key: value for key, value in local_variables.items()
-                     if key not in ('self', 'local_variables', 'is_available', 'get_random_devices')
+                     if key not in ('self', 'local_variables', 'is_available', 'get_random_devices', 'wait_available')
                      and '__py' not in key and value is not None}
         main_property = {key: value for key, value in main_dict.items()
                          if key[:3] not in ('max', 'min') and 'contains' not in key}
@@ -138,9 +138,10 @@ class RealDevices(Base):
             if cache_device is None or need_update:
                 devices, json_devices = [], []
                 for _ in range(get_random_devices):
-                    selected = random.choice(result)
-                    devices.append(selected), json_devices.append(selected.to_json())
-                    result.remove(selected)
+                    if len(result) > 0:
+                        selected = random.choice(result)
+                        devices.append(selected), json_devices.append(selected.to_json())
+                        result.remove(selected)
                 write_json = json.dumps({
                     'create_time': datetime.now().timestamp(),
                     'devices': json_devices
