@@ -69,7 +69,7 @@ def print_progress(event: Event, progress_type: str):
         'download': ('Start download file', 'Download time', 'Download finished'),
         'upload': ('Start upload file', 'Upload time', 'Upload finished'),
         'build': ('Start building file', 'Building time', 'Build finished')
-    }[progress_type]
+    }.get(progress_type, ('Start', 'Time', 'End'))
     main_icon, meet = '🐱', ('🙈', '🙉', '🙊')
     enemy = ['🐲', '🐶', '🐭', '🐝', '🦄', '🐕', '🐳', '🦑', '🦂', '🐺', '🐼', '🐸']
     row = ['.' for _ in range(15)]
