@@ -30,6 +30,10 @@ class Metadata:
             self.min_os: str = data.get('min_os')
             self.target_os: str = data.get('target_os')
             self.test_runner_plugin_path = data.get('test_runner_plugin_path')
+            self.vesrion_code: int = data.get('vesrion_code')
+            self.min_sdk: int = data.get('min_sdk')
+            self.target_sdk: int = data.get('target_sdk')
+            self.test_runner_class = data.get('test_runner_class')
 
     def __str__(self):
         return self.identifier
