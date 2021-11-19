@@ -80,7 +80,8 @@ class RealDevices(Base):
                        supports_mock_locations=None, supports_multi_touch=None, supports_xcui_test=None,
                        min_cpu_cores=None, max_cpu_cores=None, min_cpu_frequency=None, max_cpu_frequency=None,
                        min_dpi=None, max_dpi=None, min_internal_storage_size=None, max_internal_storage_size=None,
-                       model_number_contains=None, name_contains=None, min_os_version=None, max_os_version=None,
+                       model_number_contains=None, name_contains=None, name_not_contains=None,
+                       model_number_not_contains=None, min_os_version=None, max_os_version=None,
                        min_pixels_per_point=None, max_pixels_per_point=None, min_ram_size=None, max_ram_size=None,
                        min_resolution_height=None, max_resolution_height=None, min_resolution_width=None,
                        max_resolution_width=None, min_screen_size=None, max_screen_size=None, min_sd_card_size=None,
@@ -98,7 +99,9 @@ class RealDevices(Base):
         min_property = {key[4:]: value for key, value in main_dict.items() if key[:3] == 'min'}
         max_property = {key[4:]: value for key, value in main_dict.items() if key[:3] == 'max'}
         contains_property = {key.replace('_contains', ''): value for key, value in main_dict.items() if
-                             'contains' in key}
+                             'contains' in key and 'not_contains' not in key}
+        not_contains_property = {key.replace('_not_contains', ''): value for key, value in main_dict.items() if
+                                 '_not_contains' in key}
         if is_available is True:
             available_devices = self.available_devices()
 
@@ -118,7 +121,10 @@ class RealDevices(Base):
                                       for key, value in max_property.items() if value is not None))
                 check_contains = all(tuple(value.lower() in device.__getattribute__(key).lower() for key, value in
                                            contains_property.items() if value is not None))
-                return all((check_min, check_max, check_contains))
+                check_not_contains = all(
+                    tuple(value.lower() not in device.__getattribute__(key).lower() for key, value in
+                          not_contains_property.items() if value is not None))
+                return all((check_min, check_max, check_contains, check_not_contains))
             return False
 
         result = list(filter(lambda x: device_filter(x), self.devices_list()))
