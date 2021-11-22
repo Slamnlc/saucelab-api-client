@@ -1,6 +1,7 @@
 import json
 import os
 import random
+import re
 from datetime import datetime
 
 from saucelab_api_client.category import Base
@@ -85,15 +86,15 @@ class RealDevices(Base):
                        min_pixels_per_point=None, max_pixels_per_point=None, min_ram_size=None, max_ram_size=None,
                        min_resolution_height=None, max_resolution_height=None, min_resolution_width=None,
                        max_resolution_width=None, min_screen_size=None, max_screen_size=None, min_sd_card_size=None,
-                       max_sd_card_size=None, is_available=None, get_random_devices: int = None
+                       max_sd_card_size=None, is_available=None, get_random_devices: int = None, name_regex=None
                        ):
         if get_random_devices is not None:
             if not isinstance(get_random_devices, int):
                 raise ValueError('get_random_devices must be integer value')
         local_variables = locals()
+        skip_params = ('self', 'local_variables', 'is_available', 'get_random_devices', 'wait_available', 'name_regex')
         main_dict = {key: value for key, value in local_variables.items()
-                     if key not in ('self', 'local_variables', 'is_available', 'get_random_devices', 'wait_available')
-                     and '__py' not in key and value is not None}
+                     if key not in skip_params and '__py' not in key and value is not None}
         main_property = {key: value for key, value in main_dict.items()
                          if key[:3] not in ('max', 'min') and 'contains' not in key}
         min_property = {key[4:]: value for key, value in main_dict.items() if key[:3] == 'min'}
@@ -124,7 +125,10 @@ class RealDevices(Base):
                 check_not_contains = all(
                     tuple(value.lower() not in device.__getattribute__(key).lower() for key, value in
                           not_contains_property.items() if value is not None))
-                return all((check_min, check_max, check_contains, check_not_contains))
+                regex = True
+                if name_regex is not None:
+                    regex = True if len(re.findall(name_regex, device.device_id)) > 0 else False
+                return all((check_min, check_max, check_contains, check_not_contains, regex))
             return False
 
         result = list(filter(lambda x: device_filter(x), self.devices_list()))
