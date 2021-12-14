@@ -127,7 +127,7 @@ class RealDevices(Base):
                           not_contains_property.items() if value is not None))
                 regex = True
                 if name_regex is not None:
-                    regex = True if len(re.findall(name_regex, device.device_id)) > 0 else False
+                    regex = True if len(re.findall(name_regex, device.name)) > 0 else False
                 return all((check_min, check_max, check_contains, check_not_contains, regex))
             return False
 
